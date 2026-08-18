@@ -1,0 +1,304 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.preprocessing import minmax_scale
+from sklearn.preprocessing import LabelEncoder
+
+
+def main():
+    print("--------------------Assignment 44------------------------")
+    data=pd.DataFrame(
+        {
+            "Name":["Amit","Sagar","Pooja"],
+            "Math":[85,90,78],
+            "Science":[92,88,80],
+            "English":[75,85,82]
+        }
+    )
+    
+    Border="-"*80
+    print(Border)
+    print(data)
+    print(Border)
+    print("Q1-------------------------------------")
+    print(Border)
+    print("Shape of data are:",data.shape)
+    print("Total columns in dateset are :",data.columns)
+    # print("Type of dataset :",type(data["Name"].values))
+    print("Type of dataset :",type(data["English"].values))
+    
+    
+    print(Border)
+    print("Q2---------------------------------------")
+    print(Border)
+    print("Discriptive statistic are :")
+    print(data.describe())
+    
+    print(Border)
+    print("Q3-----------------------------")
+    print(Border)
+    
+    
+    for i in range(len(data)):
+        data["Total"]=data["Math"]+data["Science"]+data["English"]
+      
+    print(data)  
+      
+    print(Border)  
+    print("Q4----------------------------")  
+    print(Border)
+    print("Students who scored more than 85 in scince:")
+    
+    
+    for index in range(len(data)):
+        if data["Science"][index]>85:
+            print(index,data["Name"][index],end= " ")
+            print(data["Science"][index])
+            
+      
+    print(Border)  
+    print("Q5----------------------------")  
+    print(Border)    
+    
+    print("Replace name pooja ") 
+    data["Name"]=data["Name"].replace("Pooja" ,"puja")
+    print(data)
+            
+            
+            
+    print(Border)  
+    print("Q6----------------------------")  
+    print(Border)
+            
+    data=data.sort_values(by="Total",ascending=False)
+    
+    print("Datset is sorted in desending order by Total")
+    print(data)
+    
+    
+    print(Border)  
+    print("Q7----------------------------")  
+    print(Border)    
+    
+    
+   
+    
+    
+    
+    plt.bar(
+        data["Name"],
+        data["Total"],
+        linewidth=1,
+        alpha=0.8,
+        edgecolor="black" ,
+        width=0.5
+                
+    )
+    plt.xlabel("Student Name")
+    plt.ylabel("Total marks")
+    plt.show()
+    
+    print(Border)  
+    print("Q8----------------------------")  
+    print(Border)
+    
+    
+    sub=["Math","Science","English"]
+    amit=data[data["Name"]=="Amit"][sub].values[0]
+    # print(amit.columns)
+    
+    
+    plt.plot(
+            
+            sub,amit,
+                marker="o"
+                        
+            )
+    
+    plt.show()
+    
+    
+        
+    print(Border)  
+    print("Q9----------------------------")  
+    print(Border)
+    
+    
+    data2=pd.DataFrame(
+        {
+            "Name":["Amit","Sagar","Pooja"],
+            "Math":[np.nan,90,78],
+            "Science":[92,np.nan,80]
+            
+        }
+        
+    )
+    print(data2)
+    
+    mean1=data2["Math"].mean()
+    mean2=data2["Science"].mean()
+    
+    print(Border)
+    print("Replace NaN value to mean of column")
+    print(Border)
+    
+    data2["Math"]=data2["Math"].replace(np.nan,mean1)
+    data2["Science"]=data2["Science"].replace(np.nan,mean2)
+    
+    print(data2)
+    
+    print(Border)  
+    print("Q10----------------------------")  
+    print(Border)
+    
+    
+    print("After removing English column")
+    data=data.drop("English", axis=1)
+    print(data)
+    
+    print(Border)
+    print("--------------------Assignment 45------------------------")
+    print(Border)  
+    print("11----------------------------")  
+    print(Border) 
+    
+    #Q1-----------------
+    print("Min-max Math column")
+    data["Math"]=minmax_scale(data["Math"])
+    print(data)
+    
+    #Q2--------------
+    
+    print(Border)  
+    print("Q12----------------------------")  
+    print(Border)
+    
+    data["Gender"]=["Male","Male","Female"]
+    print(data)
+    
+    print(Border)
+    print("Performed one hot encoding on Gender column")
+    print(Border)
+    
+    Gen_encode=LabelEncoder()
+    data["Gender"]=Gen_encode.fit_transform(data["Gender"])
+    print(data)
+    
+    print(Border)  
+    print("Q13----------------------------")  
+    print(Border)
+    
+    result=data.groupby("Gender")[["Math","Science"]].mean()
+    print(result)
+    
+    print(Border)  
+    print("Q14----------------------------")  
+    print(Border)
+    
+    
+    data3=pd.DataFrame(
+            {
+                "Name":["Amit","Sagar","Pooja"],
+                "Math":[85,90,78],
+                "Science":[92,88,80],
+                "English":[75,85,82]
+            }
+        )
+    
+    X=[data3["Math"][1],data3["Science"][1],data3["English"][1]]
+    # print(X)
+    Y=["Math","Science","English"]
+    plt.pie(
+        X,labels=Y,
+        autopct="%1.1f%%"
+        
+        
+    )
+    plt.show()
+    
+    
+    print(Border)  
+    print("Q15----------------------------")  
+    print(Border)
+    
+    
+    
+    
+    # for index in range(len(data["Total"])): 
+    #     
+          
+    # subjects=["Math","Science"]  
+   
+    # res=data[data["Total"]>=250][subjects].values[0]
+    
+    Status=[]
+    
+    for total in data["Total"]:
+        if total>=250:
+           Status.append("Pass")
+        else:
+            Status.append("Fail")
+    data["Status"]=Status     
+    print(data)          
+    
+    # count=0
+    # for stu in data["Status"]:
+    #     if stu=="Pass":
+    #         count=count+1
+    
+    count=(data["Status"]=="Pass").sum()
+            
+    print("Total students passed :",count)
+            
+            
+    data.to_csv("ExportedFile.csv",index=False) #data is saved without index
+    print(Border)
+    print("data Exported sucessfully!")
+    
+    
+    df=pd.DataFrame(
+        {
+            "Name":["Amit","Sagar","Pooja","Kaveri","Neha","Prati","Raj","Hey"],
+            "Math":[85,78,78,90,90,95,80,80]
+            # "Science":[92,88,80],
+            # "English":[75,85,82]
+        }
+    )
+    print(Border)
+    plt.hist(
+        df["Math"],
+        bins=5
+    )
+    plt.xlabel("Maths score")
+    plt.ylabel("Number of students")
+    plt.show()
+  
+    print(Border)
+    data.columns=data.columns.str.replace("Math","Mathematics")
+    print(data)
+  
+  
+    df1=pd.DataFrame(
+        {
+            "Name":["Amit","Sagar","Pooja"],
+            "Math":[85,90,78],
+            "Science":[92,88,80],
+            "English":[75,85,82]
+        }
+    )
+    
+    
+    print(Border)
+    plt.boxplot(
+        df1["English"]
+    )
+    plt.show()
+  
+  
+  
+  
+  
+  
+    
+if __name__=="__main__":
+    main()
